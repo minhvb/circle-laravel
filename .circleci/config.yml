@@ -51,14 +51,14 @@ jobs:
       - run: cp .env.example .env
       - run: php artisan key:generate
       - save_cache:
-          key: env-v1-{{ checksum "composer.json" }}
+          key: env
           paths:
             - .env
       # prepare the database
       - run: touch storage/testing.sqlite
       - run: php artisan migrate --env=testing --database=sqlite_testing --force
       - save_cache:
-          key: storage-v1-{{ checksum "composer.json" }}
+          key: storage
           paths:
             - storage
   test:
@@ -73,12 +73,10 @@ jobs:
             - v1-dependencies-
       - restore_cache:
           keys:
-            - env-v1-{{ checksum "composer.json" }}
-            - env-v1-
+            - env
       - restore_cache:
           keys:
-            - storage-v1-{{ checksum "composer.json" }}
-            - storage-v1-
+            - storage
       - run: ./vendor/bin/phpunit
       - run: ./vendor/bin/phpcs --standard=PSR2 app/
 
