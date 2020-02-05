@@ -61,7 +61,24 @@ jobs:
           key: storage
           paths:
             - storage
-  test:
+  phpcs:
+    docker:
+      # Specify the version you desire here
+      - image: circleci/php:7.1-node-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
+      - restore_cache:
+          keys:
+            - env
+      - restore_cache:
+          keys:
+            - storage
+      - run: ./vendor/bin/phpcs --standard=PSR2 app/
+  phpunit:
     docker:
       # Specify the version you desire here
       - image: circleci/php:7.1-node-browsers
@@ -78,8 +95,6 @@ jobs:
           keys:
             - storage
       - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/phpcs --standard=PSR2 app/
-
   deploy:
     machine:
       enabled: true
@@ -113,9 +128,13 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test:
+      - phpcs:
+          requires:
+            - build
+      - phpunit:
           requires:
             - build
       - deploy:
           requires:
-            - test
+            - phpcs
+            - phpunit
