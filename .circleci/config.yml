@@ -134,8 +134,11 @@ workflows:
       - phpunit:
           requires:
             - build
-      - deploy:
+      - hold:
           type: approval
           requires:
             - phpcs
             - phpunit
+      - deploy:
+          requires:
+            - hold
