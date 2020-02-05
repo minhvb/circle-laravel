@@ -83,9 +83,6 @@ jobs:
   deploy:
     machine:
       enabled: true
-    branches:
-      only:
-        - master
     steps:
       - checkout
       - add_ssh_keys:
