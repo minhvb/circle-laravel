@@ -83,16 +83,19 @@ jobs:
   deploy:
     machine:
       enabled: true
+    working_directory: ~/repo
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - '6f:5b:41:2a:16:48:0d:6b:ef:7c:34:04:da:68:3f:c7'
+      - run: sudo apt-get install rsync
       - run:
           name: 'Adding Host key to know_hosts file'
           command: ssh-keyscan -t rsa unistack.vn >> ~/.ssh/known_hosts
       - run:
           command: |
+            rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
             ssh root@unistack.vn 'cd /var/www/;touch test.txt'
 workflows:
   version: 2
