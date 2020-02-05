@@ -104,7 +104,7 @@ jobs:
             rsync -azvW ~/repo/ ${SERVER_USER}@${SERVER_HOST}:${APP_PATH}
       - run:
           name: 'Set up file permissions'
-          command: ssh ${SERVER_USER}@unistack.vn 'cd ${APP_PATH};chmod -R 0777 storage;chmod 0777 .env'
+          command: ssh ${SERVER_USER}@unistack.vn 'chmod -R 0777 ${APP_PATH}/storage;chmod 0777 ${APP_PATH}/.env'
       - run:
           command: |
             ssh ${SERVER_USER}@unistack.vn 'cd ${APP_PATH};composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
