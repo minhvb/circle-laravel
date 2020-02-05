@@ -94,8 +94,13 @@ jobs:
           name: 'Adding Host key to know_hosts file'
           command: ssh-keyscan -t rsa unistack.vn >> ~/.ssh/known_hosts
       - run:
+          name: 'Synchronize file'
+          command: rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
+      - run:
+          name: 'Set up file permissions'
+          command: ssh root@unistack.vn 'chmod -R 0777 /var/www/html/circle-laravel/storage'
+      - run:
           command: |
-            rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
             ssh root@unistack.vn 'cd /var/www/html/circle-laravel;cp .env.unistack .env;composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
 workflows:
   version: 2
