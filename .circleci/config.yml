@@ -87,7 +87,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - 'SHA256:j26yEwWS1aMKLWEG8WjYAwKQ9AwLFkvUmG6q2Hr5cJ4'
+            - 'SHA256:FggeCZzVCayFcI3zLm6H6i8y+DMO+/d2fnf8xDNueTA'
       - run:
           name: 'Adding Host key to know_hosts file'
           command: ssh-keyscan -t rsa unistack.vn >> ~/.ssh/known_hosts
