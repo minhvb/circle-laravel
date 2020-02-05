@@ -98,10 +98,10 @@ jobs:
           command: rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
       - run:
           name: 'Set up file permissions'
-          command: ssh root@unistack.vn 'chmod -R 0777 /var/www/html/circle-laravel/storage;chmod 0777 .env'
+          command: ssh root@unistack.vn 'chmod -R 0777 /var/www/html/circle-laravel/storage;cp .env.unistack .env;chmod 0777 .env'
       - run:
           command: |
-            ssh root@unistack.vn 'cd /var/www/html/circle-laravel;cp .env.unistack .env;composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
+            ssh root@unistack.vn 'cd /var/www/html/circle-laravel;composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
 workflows:
   version: 2
   build_and_test:
