@@ -83,27 +83,31 @@ jobs:
   deploy:
     machine:
       enabled: true
+    environment:
+      SERVER_HOST: unistack.vn
+      SERVER_USER: root
+      APP_PATH: /var/www/html/circle-laravel
     working_directory: ~/repo
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - ${SSH_FINGERPRINT}
+            - ${UNISTACKVN_SSH_FINGERPRINT}
       - run: sudo apt-get install rsync
       - run:
           name: 'Adding Host key to know_hosts file'
-          command: ssh-keyscan -t rsa unistack.vn >> ~/.ssh/known_hosts
+          command: ssh-keyscan -t rsa ${SERVER_HOST} >> ~/.ssh/known_hosts
       - run:
           name: 'Synchronize file'
           command: |
             cp .env.unistack .env
-            rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
+            rsync -azvW ~/repo/ ${SERVER_USER}@${SERVER_HOST}:${APP_PATH}
       - run:
           name: 'Set up file permissions'
-          command: ssh root@unistack.vn 'cd /var/www/html/circle-laravel;chmod -R 0777 storage;chmod 0777 .env'
+          command: ssh ${SERVER_USER}@unistack.vn 'cd ${APP_PATH};chmod -R 0777 storage;chmod 0777 .env'
       - run:
           command: |
-            ssh root@unistack.vn 'cd /var/www/html/circle-laravel;composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
+            ssh ${SERVER_USER}@unistack.vn 'cd ${APP_PATH};composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
 workflows:
   version: 2
   build_and_test:
