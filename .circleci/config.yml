@@ -95,10 +95,12 @@ jobs:
           command: ssh-keyscan -t rsa unistack.vn >> ~/.ssh/known_hosts
       - run:
           name: 'Synchronize file'
-          command: rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
+          command: |
+            cp .env.unistack .env
+            rsync -azvW ~/repo/ root@unistack.vn:/var/www/html/circle-laravel
       - run:
           name: 'Set up file permissions'
-          command: ssh root@unistack.vn 'chmod -R 0777 /var/www/html/circle-laravel/storage;cp .env.unistack .env;chmod 0777 .env'
+          command: ssh root@unistack.vn 'cd /var/www/html/circle-laravel;chmod -R 0777 storage;chmod 0777 .env'
       - run:
           command: |
             ssh root@unistack.vn 'cd /var/www/html/circle-laravel;composer install --optimize-autoloader --no-dev;php artisan key:generate;php artisan migrate --force; php artisan optimize'
