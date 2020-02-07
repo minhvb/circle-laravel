@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cp .env.unistack .env
 composer install --optimize-autoloader
 php artisan key:generate
