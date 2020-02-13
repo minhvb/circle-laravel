@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    CircleCI Laravel Demo
+                    Laravel
                 </div>
 
                 <div class="links">
